@@ -2,9 +2,9 @@ package models;
 
 import java.util.ArrayList;
 
-public class Administrador extends Usuario{
+public class Editor extends Usuario{
     
-    public Administrador(String nombre, String contrasena) {
+    public Editor(String nombre, String contrasena) {
         this.nombre = nombre;
         this.contrasena = contrasena;
     }
@@ -27,10 +27,11 @@ public class Administrador extends Usuario{
     }
 
     public Contenido publicarContenido(Contenido contenido) {
-        return contenido.publicar();
+        return null;
     }
 
     public boolean eliminarContenido(ArrayList<Contenido> listaContenido, Contenido contenido) {
-        return listaContenido.remove(contenido);
+        return false;
     }
+
 }
