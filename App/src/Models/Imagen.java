@@ -37,7 +37,7 @@ public class Imagen extends Contenido {
 
     @Override
     public Contenido publicar() {
-        final Contenido contenidoAPublicar = new Imagen(nombre, descripcion, contenidoPuntual, etiquetas, formato);
+        Contenido contenidoAPublicar = new Imagen(nombre, descripcion, contenidoPuntual, etiquetas, formato);
         
         return contenidoAPublicar;
     }

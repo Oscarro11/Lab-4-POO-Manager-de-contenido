@@ -30,7 +30,7 @@ public class Video extends Contenido {
 
     @Override
     public Contenido publicar() {
-        final Contenido contenidoAPublicar = new Video(nombre, descripcion, contenidoPuntual, etiquetas, duracion);
+        Contenido contenidoAPublicar = new Video(nombre, descripcion, contenidoPuntual, etiquetas, duracion);
         
         return contenidoAPublicar;
     }

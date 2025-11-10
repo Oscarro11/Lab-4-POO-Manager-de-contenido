@@ -30,7 +30,7 @@ public class Articulo extends Contenido {
 
     @Override
     public Contenido publicar() {
-        final Contenido contenidoAPublicar = new Articulo(nombre, descripcion, contenidoPuntual, etiquetas, cantidadDePalabras);
+        Contenido contenidoAPublicar = new Articulo(nombre, descripcion, contenidoPuntual, etiquetas, cantidadDePalabras);
         
         return contenidoAPublicar;
     }

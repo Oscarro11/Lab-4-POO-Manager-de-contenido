@@ -9,6 +9,7 @@ public class Administrador extends Usuario{
         this.contrasena = contrasena;
     }
 
+    @Override
     public Contenido crearContenido(String nombre, String descripcion, String contenido, ArrayList<String> etiquetas, int tipoContenido, int datoAdicional){
         Contenido contenidoNuevo;
 
@@ -19,17 +20,28 @@ public class Administrador extends Usuario{
             default -> contenidoNuevo = null;
         }
 
+        contenidoNuevo.setAutor(this.nombre);
+
         return contenidoNuevo;
     }
 
+    @Override
     public void editarContenido(Contenido contenido, String descripcion, String contenidoPuntual, ArrayList<String> etiquetas) {
         contenido.editar(descripcion, contenidoPuntual, etiquetas);
+        contenido.setUltimoModificador(this.nombre);
     }
 
+    @Override
     public Contenido publicarContenido(Contenido contenido) {
-        return contenido.publicar();
+        Contenido contenidoAPublicar;
+
+        contenidoAPublicar = contenido.publicar();
+        contenidoAPublicar.setPublicador(this.nombre);
+
+        return contenidoAPublicar;
     }
 
+    @Override
     public boolean eliminarContenido(ArrayList<Contenido> listaContenido, Contenido contenido) {
         return listaContenido.remove(contenido);
     }
