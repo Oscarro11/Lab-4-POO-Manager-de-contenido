@@ -1,6 +1,7 @@
 import models.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Controlador {
     private Usuario usuarioActivo;
@@ -52,18 +53,34 @@ public class Controlador {
         return usuarioEncontrado;
     }
 
-    public boolean crearContenido(String nombre, String descripcion, String contenidoPuntual, ArrayList<String> etiquetas, int tipoContenido, int datoAdicional) {
-        Contenido contenidoNuevo;
-        boolean nombreUsado = false;
+    private Contenido buscarContenido(String nombre) {
+        Contenido contenidoBuscado = null;
 
         for (Contenido contenido: listaContenidoPublicado) {
             if (contenido.getNombre().equals(nombre)) {
-                nombreUsado = true;
+                contenidoBuscado = contenido;
                 break;
             }
         }
 
-        if (!nombreUsado) {
+        return contenidoBuscado;
+    }
+
+    public String buscarDatosContenido(String nombre) {
+        return buscarContenido(nombre).toString();
+    }
+
+    public boolean crearContenido(String nombre, String descripcion, String contenidoPuntual, ArrayList<String> etiquetas, int tipoContenido, int datoAdicional) {
+        Contenido contenidoNuevo;
+        Contenido contenidoExistente = null;
+        boolean nombreUsado = false;
+
+        contenidoExistente = buscarContenido(nombre);
+
+        if (contenidoExistente != null) {
+            nombreUsado = true;
+        }
+        else {
             for (Contenido contenido: listaContenidoNoPublicado) {
                 if (contenido.getNombre().equals(nombre)) {
                     nombreUsado = true;
@@ -128,5 +145,82 @@ public class Controlador {
         else{
             return usuarioActivo.eliminarContenido(listaContenidoNoPublicado, contenidoAEliminar);
         }
+    }
+
+    public ArrayList<String> filtrarContenido(ArrayList<String> etiquetasFiltro) {
+        boolean incluyeEtiquetas;
+        ArrayList<String> contenidoFiltrado = new ArrayList<String>();
+        
+        for (Contenido contenido: listaContenidoPublicado) {
+            incluyeEtiquetas = true;
+
+            for (String etiqueta : etiquetasFiltro) {
+                if (!contenido.containsEtiqueta(etiqueta)) {
+                    incluyeEtiquetas = false;
+                    break;
+                }
+            }
+
+            if (incluyeEtiquetas) {
+                contenidoFiltrado.add(contenido.getNombre());
+            }
+        }
+
+        return contenidoFiltrado;
+    }
+
+    public void agregarVisitas(String nombreContenido, int cantidadDeVisitas){
+        Contenido contenido = buscarContenido(nombreContenido);
+
+        contenido.anadirVisitas(cantidadDeVisitas);
+    }
+
+    public String generarReporte() {
+        StringBuilder builder = new StringBuilder();
+        StringBuilder auxbuilder = new StringBuilder();
+        int cantArticulos = 0;
+        int cantVideos = 0;
+        int cantImagenes = 0;
+        String mediaMasVista;
+
+        ArrayList<Contenido> copiaListaContenidoPublicado = new ArrayList<>(listaContenidoPublicado);
+        Collections.sort(copiaListaContenidoPublicado);
+
+        for (Contenido contenido : copiaListaContenidoPublicado) {
+            switch (contenido) {
+                case Articulo a -> cantArticulos++;
+                case Video v -> cantVideos++;
+                case Imagen i -> cantImagenes++;
+
+                //Puede ser cualquier valor
+                default -> cantArticulos--;
+            }
+        }
+
+        if (cantArticulos > cantImagenes && cantArticulos > cantVideos) {
+            mediaMasVista = "Articulos";
+        }
+        else if (cantImagenes > cantArticulos && cantImagenes > cantVideos) {
+            mediaMasVista = "Imagenes";
+        } 
+        else {
+            mediaMasVista = "Videos";
+        }
+
+        builder.append(String.format("El formato de contenido más popular son l@s %s \n", mediaMasVista));
+        
+        for (int i = 0; i < 3; i++) {
+            try {
+                Contenido contenido = copiaListaContenidoPublicado.remove(copiaListaContenidoPublicado.size() - 1);
+                auxbuilder.append(String.format("- %s", contenido));
+                
+            } catch (Exception e) {
+                break;
+            }
+        }
+
+        builder.append(String.format("Estos son los tres contenidos más visualizados: \n%s\n", auxbuilder.toString()));
+
+        return builder.toString();
     }
 }

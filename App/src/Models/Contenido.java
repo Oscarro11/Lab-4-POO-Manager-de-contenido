@@ -5,7 +5,7 @@ import interfaces.Publicar;
 import interfaces.Visualizar;
 import java.util.ArrayList;
 
-public abstract class Contenido implements Editar, Publicar, Visualizar{
+public abstract class Contenido implements Editar, Publicar, Visualizar, Comparable<Contenido>{
     protected String nombre;
     protected String descripcion;
     protected String contenidoPuntual;
@@ -24,6 +24,20 @@ public abstract class Contenido implements Editar, Publicar, Visualizar{
 
     public void anadirVisitas(int cantidadDeVisitas){
         this.visitas += cantidadDeVisitas;
+    }
+
+    @Override
+    public int compareTo(Contenido c) {
+
+        if (this.getNumeroDeVisitas() > c.getNumeroDeVisitas()) {
+            return 1;
+        }
+        else if (this.getNumeroDeVisitas() == c.getNumeroDeVisitas()){
+            return 0;
+        }
+        else{
+            return -1;
+        }
     }
 
 
@@ -90,6 +104,10 @@ public abstract class Contenido implements Editar, Publicar, Visualizar{
 
     public String getEtiqueta(int pos){
         return etiquetas.get(pos);
+    }
+
+    public boolean containsEtiqueta(String etiqueta){
+        return etiquetas.contains(etiqueta);
     }
 
     public void delEtiqueta(int pos){
